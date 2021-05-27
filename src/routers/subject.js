@@ -41,7 +41,15 @@ router.get('/subjects', auth, async (req, res) => {
     }
 })
 
+router.get('/subjects/all', auth, async (req, res) => {
+    try {
+       const subjects =  await Subject.find().select('name')
+       res.send(subjects)
 
+    } catch(e) {
+        res.status(500).send({error: e})
+    }
+})
 //Update subject
 
 router.patch('/subjects/:id', auth, async (req, res) => {

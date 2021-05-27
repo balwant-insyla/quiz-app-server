@@ -43,9 +43,9 @@ router.get('/questions/all', auth, async (req, res)=> {
 
 router.get('/questions', auth, async (req, res)=> {
     try{
-        if(req.user.role === 'admin') {
+        if(req.user.role === 'student') {
             //const questions = await Question.find({subject: req.query.subject, level: req.query.level}).limit(20)
-          console.log(`${req.query.subject} ${req.query.level} ${req.query.size}`)
+          //console.log(`${req.query.subject} ${req.query.level} ${req.query.size}`)
            const pipeline =[
                
                { 
@@ -60,7 +60,7 @@ router.get('/questions', auth, async (req, res)=> {
            if(questions.length === 0) {
                return res.send().status(404)
            }
-           console.log(JSON.stringify(questions))
+           //console.log(JSON.stringify(questions))
            res.send(questions)
        } else {
            res.status(401).send({error: 'Unauthorized Access'})

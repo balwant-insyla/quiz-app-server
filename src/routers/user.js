@@ -46,21 +46,21 @@ router.post('/users/login', async (req, res) => {
     const {email, mobile, password} = req.body
     try {
         let user = this
-    if(email) {
-        user = await User.findOne({ email })
-    } else if(mobile) {
-        user = await User.findOne({ mobile })
-    }
-    
-    if (!user) return res.status(400).send({message: 'No User found!'})
+            if(email) {
+                user = await User.findOne({ email })
+            } else if(mobile) {
+                user = await User.findOne({ mobile })
+            }
+            
+            if (!user) return res.status(400).send({message: 'No User found!'})
 
-    const isMatch = await bcrypt.compare(password, user.password)
+            const isMatch = await bcrypt.compare(password, user.password)
 
-    if (!isMatch) return res.status(400).send({message: 'Invalid credentials!'})
+            if (!isMatch) return res.status(400).send({message: 'Invalid credentials!'})
 
-        //const user = await User.findByCredentials(req.body.email, req.body.mobile, req.body.password)
-        const token = await user.generateAuthToken()
-        res.send({user, token }).status(200)
+                //const user = await User.findByCredentials(req.body.email, req.body.mobile, req.body.password)
+                const token = await user.generateAuthToken()
+                res.send({user, token }).status(200)
     } catch (e) {
         console.log(e)
         res.status(400).send(e)
