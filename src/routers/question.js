@@ -26,6 +26,7 @@ router.post('/questions', auth, async (req, res) => {
             
             res.send(question)
         } catch(e) {
+            //console.log(e)
             res.status(500).send({error: e})
         }
     } else {
@@ -91,14 +92,17 @@ router.patch('/questions/:id', auth, async (req, res) => {
         try {
             const question = await Question.findOne({_id: req.params.id, owner: req.user._id})
             const level = question.level
-            if(level !== req.body.level) {
-                const getLevel = await Level.findOne({level: req.body.level})
-                if(!getLevel) {
-                    const level  = new Level({level: req.body.level})
-                    await level.save()
+            if(req.body.level) {
+                if(level !== req.body.level) {
+                    const getLevel = await Level.findOne({level: req.body.level})
+                    if(!getLevel) {
+                        const level  = new Level({level: req.body.level})
+                        await level.save()
+                    }
+                    
                 }
-                
             }
+            
         if(!question) {
             return res.status(404).send({error: 'Question not found.'})
         }
@@ -106,6 +110,7 @@ router.patch('/questions/:id', auth, async (req, res) => {
         await question.save()
         res.send(question)
         } catch(e) {
+            //console.log(e)
             res.status(500).send({error: e})
         }
         
