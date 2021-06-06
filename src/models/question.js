@@ -45,7 +45,11 @@ const questionSchema = mongoose.Schema({
 },{
     timestamps: true
 })
-
+questionSchema.virtual('result', {
+    ref: 'Result',
+    localField: '_id',
+    foreignField: '_id'
+})
 const Question = mongoose.model('Question', questionSchema)
 
 module.exports = Question

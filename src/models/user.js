@@ -101,6 +101,11 @@ userSchema.virtual('question', {
     localField: '_id',
     foreignField: 'owner'
 })
+userSchema.virtual('result', {
+    ref: 'Result',
+    localField: '_id',
+    foreignField: 'student'
+})
 userSchema.virtual('subject', {
     ref: 'Subject',
     localField: '_id',

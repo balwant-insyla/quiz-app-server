@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('../db/mongoose')
 const Question = require('../models/question')
 const auth = require('../middleware/auth')
-
+const Level = require('../models/level')
 const router = new express.Router()
 
 
@@ -14,8 +14,16 @@ router.post('/questions', auth, async (req, res) => {
             ...req.body,
             owner: req.user._id
         })
+        const getLevel = await Level.findOne({level: req.body.level})
+        
         try {
             await question.save()
+            
+            if(!getLevel) {
+                const level  = new Level({level: req.body.level})
+                await level.save()
+            }
+            
             res.send(question)
         } catch(e) {
             res.status(500).send({error: e})
@@ -82,6 +90,15 @@ router.patch('/questions/:id', auth, async (req, res) => {
         }
         try {
             const question = await Question.findOne({_id: req.params.id, owner: req.user._id})
+            const level = question.level
+            if(level !== req.body.level) {
+                const getLevel = await Level.findOne({level: req.body.level})
+                if(!getLevel) {
+                    const level  = new Level({level: req.body.level})
+                    await level.save()
+                }
+                
+            }
         if(!question) {
             return res.status(404).send({error: 'Question not found.'})
         }
